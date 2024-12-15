@@ -74,6 +74,9 @@ import { User, Thought } from '../models/index.js';
        return res.status(404).json({ message: 'No user with this id!' });
      }
 
+     // remove from other users' friends
+     await User.updateMany({ friends: req.params.userId }, { $pull: { friends: req.params.userId } }, { new: true });
+
      // BONUS: get ids of user's `thoughts` and delete them all
      await Thought.deleteMany({ _id: { $in: dbUserData.thoughts } });
      return res.json({ message: 'User and associated thoughts deleted!' });
